@@ -2,6 +2,7 @@ package maze;
 
 import java.io.*;
 import java.util.*;
+import maze.MazeSolver;
 
 class Maze {
     private static final String wall = "\u2588\u2588";
@@ -31,13 +32,16 @@ class Maze {
             wallMaze = pseudoMaze;
 
             mazeExists = true;
+            printMaze();
         } else {
             this.maze = generateMaze();
             wallify();
             makeExitTunnel();
 
             mazeExists = true;
+            printMaze();
         }
+
     }
 
     static boolean getState() {
@@ -48,15 +52,13 @@ class Maze {
         for (char[] row : wallMaze) {
             for (char block : row) {
                 switch (block) {
-                    case 'S':
-                        System.out.print(" S");
-                        break;
                     case '1':
                         System.out.print(wall);
                         break;
                     case 'E':
                     case '0':
                     case 'T':
+                    case 'S':
                     default:
                         System.out.print(space);
                         break;
@@ -65,6 +67,10 @@ class Maze {
             }
             System.out.println();
         }
+    }
+
+    static void solveMaze() {
+        MazeSolver solver = new MazeSolver(wallMaze);
     }
 
     private static  boolean isOutOfBounds(int row, int col) {
@@ -285,6 +291,8 @@ class Maze {
 
             wallMaze = tempMaze;
             mazeExists = true;
+
+            printMaze();
         } catch (Exception e) {
             System.out.printf("The file %s does not exist\n", filePath);
         }
