@@ -1,7 +1,5 @@
 package maze;
 
-import maze.Maze;
-
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -17,7 +15,8 @@ public class Main {
                 "2. Load a maze");
         if (isGenerated) {
             System.out.println("3. Save the maze\n" +
-                    "4. Display the maze");
+                    "4. Display the maze\n" +
+                    "5. Find the escape");
         }
         System.out.println("0. Exit");
 
@@ -62,6 +61,7 @@ public class Main {
                     System.out.println("Incorrect option. Please try again");
                     break;
             }
+            System.out.println();
         }
         while (option != 0) {
             option = getOption(true);
@@ -81,6 +81,9 @@ public class Main {
                     break;
                 case 4:
                     mazeGenerator.printMaze();
+                    break;
+                case 5:
+                    mazeGenerator.solveMaze();
                     break;
                 default:
                     System.out.println("Incorrect option. Please try again");
