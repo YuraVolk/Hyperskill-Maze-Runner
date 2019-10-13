@@ -1,15 +1,18 @@
 package maze;
 
+import java.io.*;
 import java.util.*;
 
 class Maze {
     private static final String wall = "\u2588\u2588";
     private static final String space = "  ";
-    private final int rows;
-    private final int columns;
+    private static int rows;
+    private static int columns;
 
-    protected static int exitX;
-    protected static int exitY;
+    private static boolean mazeExists = false;
+
+    private static int exitX;
+    private static int exitY;
 
     private static char[][] maze;
     private static char[][] wallMaze;
@@ -19,33 +22,41 @@ class Maze {
         this.columns = height;
 
         if (rows <= 0 || columns <= 0) {
-            System.exit(0);
+            System.out.println("Cannot generate the maze. Dimensions are incorrect.");
         } else if ((rows <= 4 && columns <= 4) && !((rows == 4 && columns > 4) || (rows > 4 && columns == 4))) {
             char[][] pseudoMaze = new char[rows][columns];
             for (char[] row : pseudoMaze)
                 Arrays.fill(row, '1');
 
-            printMaze(pseudoMaze);
+            wallMaze = pseudoMaze;
+
+            mazeExists = true;
         } else {
             this.maze = generateMaze();
             wallify();
             makeExitTunnel();
 
-            printMaze(wallMaze);
+            mazeExists = true;
         }
     }
 
-    protected static void printMaze(char[][] maze) {
-        for (char[] row : maze) {
+    static boolean getState() {
+        return mazeExists;
+    }
+
+    static void printMaze() {
+        for (char[] row : wallMaze) {
             for (char block : row) {
                 switch (block) {
+                    case 'S':
+                        System.out.print(" S");
+                        break;
                     case '1':
                         System.out.print(wall);
                         break;
                     case 'E':
                     case '0':
                     case 'T':
-                    case 'S':
                     default:
                         System.out.print(space);
                         break;
@@ -119,6 +130,8 @@ class Maze {
         }
         directExit(direction);
         wallMaze[exitX][exitY] = 'T';
+
+        wallMaze = Arrays.copyOf(wallMaze, wallMaze.length - 2);
     }
 
     private static <T> T[]addStartingElement(T[] elements, T element) {
@@ -235,6 +248,45 @@ class Maze {
             if (this.c.compareTo(parent.c) != 0)
                 return new Point(this.r, this.c + this.c.compareTo(parent.c), this);
             return null;
+        }
+    }
+
+    static void saveMaze(String filePath) {
+        File f = new File(filePath + ".txt");
+
+        try {
+            FileWriter out = new FileWriter(f);
+            for (char[] row : wallMaze) {
+                out.write(row);
+                out.write(System.lineSeparator());
+            }
+
+            out.close();
+        } catch (Exception e) {
+            System.out.println("Error! No permission to save to this directory.");
+        }
+
+    }
+
+    static void loadMaze(String filePath) {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(filePath + ".txt"));
+            int lines = 0;
+            while (reader.readLine() != null) lines++;
+            reader.close();
+
+            char[][] tempMaze = new char[lines][];
+            File file = new File(filePath + ".txt");
+            Scanner scanner = new Scanner(file);
+
+            for (int row = 0; scanner.hasNextLine() && row < lines; row++) {
+                tempMaze[row] = scanner.nextLine().toCharArray();
+            }
+
+            wallMaze = tempMaze;
+            mazeExists = true;
+        } catch (Exception e) {
+            System.out.printf("The file %s does not exist\n", filePath);
         }
     }
 }
