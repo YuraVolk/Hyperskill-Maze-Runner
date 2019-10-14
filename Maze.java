@@ -2,7 +2,6 @@ package maze;
 
 import java.io.*;
 import java.util.*;
-import maze.MazeSolver;
 
 class Maze {
     private static final String wall = "\u2588\u2588";
@@ -55,10 +54,12 @@ class Maze {
                     case '1':
                         System.out.print(wall);
                         break;
+                    case 'S':
+                        System.out.print(" S");
+                        break;
                     case 'E':
                     case '0':
                     case 'T':
-                    case 'S':
                     default:
                         System.out.print(space);
                         break;
@@ -173,16 +174,18 @@ class Maze {
     }
 
     public char[][] generateMaze() {
-        int r = rows - 2, c = columns - 2;
+        int rowsGen = rows - 2;
+        int columnGen = columns - 2;
 
-        StringBuilder s = new StringBuilder(c);
-        for (int x = 0; x < c; x++)
-            s.append('1');
-        char[][] maz = new char[r][c];
-        for (int x = 0; x < r; x++) maz[x] = s.toString().toCharArray();
+        StringBuilder stBuilder = new StringBuilder(columnGen);
+        for (int x = 0; x < columnGen; x++) {
+            stBuilder.append('1');
+        }
+        char[][] mazeSet = new char[rowsGen][columnGen];
+        for (int x = 0; x < rowsGen; x++) mazeSet[x] = stBuilder.toString().toCharArray();
 
-        Point st = new Point((int)(Math.random() * r), (int)(Math.random() * c), null);
-        maz[st.r][st.c] = 'S';
+        Point st = new Point((int)(Math.random() * rowsGen), (int)(Math.random() * columnGen), null);
+        mazeSet[st.r][st.c] = 'S';
 
         ArrayList < Point > frontier = new ArrayList <Point> ();
         for (int x = -1; x <= 1; x++)
@@ -190,7 +193,7 @@ class Maze {
                 if (x == 0 && y == 0 || x != 0 && y != 0)
                     continue;
                 try {
-                    if (maz[st.r + x][st.c + y] == '0') continue;
+                    if (mazeSet[st.r + x][st.c + y] == '0') continue;
                 } catch (Exception e) {
                     continue;
                 }
@@ -202,18 +205,18 @@ class Maze {
             Point cu = frontier.remove((int)(Math.random() * frontier.size()));
             Point op = cu.opposite();
             try {
-                if (maz[cu.r][cu.c] == '1') {
-                    if (maz[op.r][op.c] == '1') {
+                if (mazeSet[cu.r][cu.c] == '1') {
+                    if (mazeSet[op.r][op.c] == '1') {
 
-                        maz[cu.r][cu.c] = '0';
-                        maz[op.r][op.c] = '0';
+                        mazeSet[cu.r][cu.c] = '0';
+                        mazeSet[op.r][op.c] = '0';
                         last = op;
                         for (int x = -1; x <= 1; x++)
                             for (int y = -1; y <= 1; y++) {
                                 if (x == 0 && y == 0 || x != 0 && y != 0)
                                     continue;
                                 try {
-                                    if (maz[op.r + x][op.c + y] == '0') continue;
+                                    if (mazeSet[op.r + x][op.c + y] == '0') continue;
                                 } catch (Exception e) {
                                     continue;
                                 }
@@ -226,7 +229,7 @@ class Maze {
 
             try {
                 if (frontier.isEmpty()) {
-                    maz[last.r][last.c] = 'E';
+                    mazeSet[last.r][last.c] = 'E';
                 }
             } catch (Exception e) {
                 System.exit(0);
@@ -235,7 +238,7 @@ class Maze {
         }
 
 
-        return maz;
+        return mazeSet;
     }
 
     public static class Point {
@@ -289,9 +292,14 @@ class Maze {
                 tempMaze[row] = scanner.nextLine().toCharArray();
             }
 
-            wallMaze = tempMaze;
-            mazeExists = true;
+            wallMaze = new char[tempMaze.length][tempMaze[0].length];
+            for (int i = 0; i < wallMaze.length; i++) {
+                for (int j = 0; j < wallMaze[i].length; j++) {
+                    wallMaze[i][j] = tempMaze[i][j];
+                }
+            }
 
+            mazeExists = true;
             printMaze();
         } catch (Exception e) {
             System.out.printf("The file %s does not exist\n", filePath);
