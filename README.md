@@ -4,4 +4,4 @@
 Hyperskill Implementation of Hard Project.
 
 Hyperskill Maze Runner Project.
-Before contributing read Code of Conduct.
+Before contributing or viewing read Code of Conduct.
