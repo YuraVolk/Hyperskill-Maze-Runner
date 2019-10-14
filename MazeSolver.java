@@ -9,6 +9,10 @@ class MazeSolver {
     private static int endRow;
     private static int endCol;
 
+    private static final String wall = "\u2588\u2588";
+    private static final String space = "  ";
+    private static final String path = "//";
+
     private static ArrayList<Integer> coordinatesX = new ArrayList<>();
     private static ArrayList<Integer> coordinatesY = new ArrayList<>();
 
@@ -25,11 +29,19 @@ class MazeSolver {
     static void printMaze() {
         for (String[] row : maze) {
             for (String block : row) {
-                if (block.length() > 1) {
-                    System.out.print(block + " ");
-                } else {
-                    System.out.print(block + "  ");
-                }
+               switch (block) {
+                   case "o":
+                        System.out.print(wall);
+                       break;
+                   case "/":
+                   case "T":
+                   case "S":
+                        System.out.print(path);
+                       break;
+                   default:
+                        System.out.print(space);
+                        break;
+               }
             }
             System.out.println();
         }
@@ -140,11 +152,67 @@ class MazeSolver {
 
     private static void findExitPossiblePath() {
         int i = 0;
-        System.out.println(startRow + " " + startCol);
         boolean found = setFourNeighbours(i, startRow, startCol);
         while (!found) {
             i++;
             found = iterateOver(i);
         }
+        showWay(i);
+    }
+
+    private static  boolean isOutOfBounds(int row, int col) {
+        if (row < 0 || row >= maze[0].length || col < 0 || col >= maze.length) {
+            return true;
+        }
+        return false;
+    }
+
+    private static int[] getPathDirection(int i, int x, int y) {
+        if (!isOutOfBounds(x, y - 1)) {
+            if (maze[x][y-1].matches("\\d+")) {
+                if (Integer.parseInt(maze[x][y-1]) == i) {
+                    y--;
+                }
+            }
+        }
+        if (!isOutOfBounds(x, y + 1)) {
+            if (maze[x][y+1].matches("\\d+")) {
+                if (Integer.parseInt(maze[x][y + 1]) == i) {
+                    y++;
+                }
+            }
+        }
+        if (!isOutOfBounds(x - 1, y)) {
+            if (maze[x-1][y].matches("\\d+")) {
+                if(Integer.parseInt(maze[x-1][y]) == i) {
+                    x--;
+                }
+            }
+        }
+        if (!isOutOfBounds(x + 1, y)) {
+
+            if (maze[x+1][y].matches("\\d+")) {
+                if(Integer.parseInt(maze[x+1][y]) == i) {
+                    x++;
+                }
+            }
+        }
+        maze[x][y] = "/";
+        int[] out = new int[]{x,y};
+        return out;
+    }
+
+    private static void showWay(int i) {
+        int x = endRow;
+        int y = endCol;
+        int[] results;
+        while (i != 0) {
+            results = getPathDirection(i, x, y);
+            x = results[0];
+            y = results[1];
+            i--;
+        }
+        getPathDirection(i, x, y);
+        i--;
     }
 }
