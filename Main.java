@@ -7,7 +7,7 @@ public class Main {
     private static boolean mazeExists = false;
     private static Maze mazeGenerator;
 
-    private static int getOption(boolean isGenerated) {
+    static private int getOption(boolean isGenerated) {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("=== Menu ===\n" +
@@ -79,11 +79,11 @@ public class Main {
                 case 3:
                     mazeGenerator.saveMaze(scanner.nextLine());
                     break;
-                case 4:
-                    mazeGenerator.printMaze();
-                    break;
                 case 5:
                     mazeGenerator.solveMaze();
+                    break;
+                case 4:
+                    mazeGenerator.printMaze();
                     break;
                 default:
                     System.out.println("Incorrect option. Please try again");
