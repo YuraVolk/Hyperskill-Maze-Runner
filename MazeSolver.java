@@ -42,9 +42,11 @@ class MazeSolver {
                     case 'o':
                         System.out.print("\u2588\u2588");
                         break;
+                    case 'S':
+                        System.out.print(" S");
+                        break;
                     case '/':
                     case 'T':
-                    case 'S':
                         System.out.print("//");
                         break;
                     default:
@@ -215,12 +217,22 @@ class MazeSolver {
         int x = endRow;
         int y = endCol;
         int[] results;
-        while (i != 0) {
+        
+        while (x != startRow && y != startCol) {
             results = getPathDirection(i, x, y);
             x = results[0];
             y = results[1];
             i--;
         }
+        if (i > 1) {
+            while (i != 1) {
+                results = getPathDirection(i, x, y);
+                x = results[0];
+                y = results[1];
+                i--;
+            }
+        }
+
         getPathDirection(i, x, y);
         i--;
     }
