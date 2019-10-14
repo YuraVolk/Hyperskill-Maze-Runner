@@ -1,15 +1,15 @@
-# Contributor Covenant Code of Conduct
+# Code of Conduct
 
-## Our Pledge
+## Pledge
 
-In the interest of fostering an open and welcoming environment, we as
-contributors and maintainers pledge to making participation in our project and
-our community a harassment-free experience for everyone, regardless of age, body
-size, disability, ethnicity, sex characteristics, gender identity and expression,
-level of experience, education, socio-economic status, nationality, personal
-appearance, race, religion, or sexual identity and orientation.
+Any participation is welcomed. 
+Contibutors and viewers of the project 
+can be any age, body size, disablity, ethnicity, sex characteristics, gender 
+identity and expression, level of experience, education, socio-economic 
+status, nationality, personal appearence, race, religion, or sexual identity 
+and orientation.
 
-## Our Standards
+## Standards
 
 Examples of behavior that contributes to creating a positive environment
 include:
@@ -31,13 +31,17 @@ Examples of unacceptable behavior by participants include:
 * Other conduct which could reasonably be considered inappropriate in a
  professional setting
 
-## Our Responsibilities
+Strictly forbidden to use this code in 
+order to pass Hyperskill Project. Viewing
+and copy-pasting is strictly forbidden for
+Hyperskill users.
 
-Project maintainers are responsible for clarifying the standards of acceptable
-behavior and are expected to take appropriate and fair corrective action in
+## Responsibilities
+
+I am responsive to take appropriate and fair corrective action in
 response to any instances of unacceptable behavior.
 
-Project maintainers have the right and responsibility to remove, edit, or
+I have the right and responsibility to remove, edit, or
 reject comments, commits, code, wiki edits, issues, and other contributions
 that are not aligned to this Code of Conduct, or to ban temporarily or
 permanently any contributor for other behaviors that they deem inappropriate,
@@ -67,7 +71,8 @@ members of the project's leadership.
 
 ## Attribution
 
-This Code of Conduct is adapted from the [Contributor Covenant][homepage], version 1.4,
+This Code of Conduct is contains information from the [Contributor Covenant][homepage], 
+version 1.4,
 available at https://www.contributor-covenant.org/version/1/4/code-of-conduct.html
 
 [homepage]: https://www.contributor-covenant.org
