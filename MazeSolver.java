@@ -24,10 +24,8 @@ class MazeSolver {
 
     char[][] stringToChar(String[][] stringArray) {
         char[][] charArray = new char[stringArray.length][stringArray[0].length];
-        for(int i = 0; i < stringArray.length; i++)
-        {
-            for(int j = 0; j < stringArray[0].length; j++)
-            {
+        for(int i = 0; i < stringArray.length; i++) {
+            for(int j = 0; j < stringArray[0].length; j++) {
                 charArray[i][j] = stringArray[i][j].charAt(0);
             }
         }
@@ -42,11 +40,10 @@ class MazeSolver {
                     case 'o':
                         System.out.print("\u2588\u2588");
                         break;
-                    case 'S':
-                        System.out.print(" S");
-                        break;
                     case '/':
                     case 'T':
+                    case 'F':
+                    case 'S':
                         System.out.print("//");
                         break;
                     default:
@@ -76,7 +73,9 @@ class MazeSolver {
                         set[i][j] = "o";
                         break;
                     case 'E':
+                    case 'F':
                     default:
+                        System.out.println(i + " " + j );
                         set[i][j] = "0";
                         break;
                 }
@@ -87,47 +86,55 @@ class MazeSolver {
     private boolean setNeighbour(int i, String direction, int x, int y) {
         switch (direction) {
             case "L":
-                if (maze[x][y - 1] == "T") {
-                    return true;
-                }
-                if (maze[x][y - 1] == "0") {
-                    maze[x][y - 1] = Integer.toString(i + 1);
-                    coordinatesX.add(x);
-                    coordinatesY.add(y - 1);
-                    return false;
+                if (!isOutOfBounds(x, y-1)) {
+                    if (maze[x][y - 1] == "T") {
+                        return true;
+                    }
+                    if (maze[x][y - 1] == "0") {
+                        maze[x][y - 1] = Integer.toString(i + 1);
+                        coordinatesX.add(x);
+                        coordinatesY.add(y - 1);
+                        return false;
+                    }
                 }
                 break;
             case "R":
-                if (maze[x][y + 1] == "T") {
-                    return true;
-                }
-                if (maze[x][y + 1] == "0") {
-                    maze[x][y + 1] = Integer.toString(i + 1);
-                    coordinatesX.add(x);
-                    coordinatesY.add(y + 1);
-                    return false;
+                if (!isOutOfBounds(x, y+1)) {
+                    if (maze[x][y + 1] == "T") {
+                        return true;
+                    }
+                    if (maze[x][y + 1] == "0") {
+                        maze[x][y + 1] = Integer.toString(i + 1);
+                        coordinatesX.add(x);
+                        coordinatesY.add(y + 1);
+                        return false;
+                    }
                 }
                 break;
             case "T":
-                if (maze[x - 1][y] == "T") {
-                    return true;
-                }
-                if (maze[x - 1][y] == "0") {
-                    maze[x - 1][y] = Integer.toString(i + 1);
-                    coordinatesX.add(x - 1);
-                    coordinatesY.add(y);
-                    return false;
+                if (!isOutOfBounds(x-1, y)) {
+                    if (maze[x - 1][y] == "T") {
+                        return true;
+                    }
+                    if (maze[x - 1][y] == "0") {
+                        maze[x - 1][y] = Integer.toString(i + 1);
+                        coordinatesX.add(x - 1);
+                        coordinatesY.add(y);
+                        return false;
+                    }
                 }
                 break;
             case "B":
-                if (maze[x + 1][y] == "T") {
-                    return true;
-                }
-                if (maze[x + 1][y] == "0") {
-                    maze[x + 1][y] = Integer.toString(i + 1);
-                    coordinatesX.add(x + 1);
-                    coordinatesY.add(y);
-                    return false;
+                if (!isOutOfBounds(x+1, y)) {
+                    if (maze[x + 1][y] == "T") {
+                        return true;
+                    }
+                    if (maze[x + 1][y] == "0") {
+                        maze[x + 1][y] = Integer.toString(i + 1);
+                        coordinatesX.add(x + 1);
+                        coordinatesY.add(y);
+                        return false;
+                    }
                 }
                 break;
             default:
@@ -217,22 +224,12 @@ class MazeSolver {
         int x = endRow;
         int y = endCol;
         int[] results;
-        
-        while (x != startRow && y != startCol) {
+        while (i != 0) {
             results = getPathDirection(i, x, y);
             x = results[0];
             y = results[1];
             i--;
         }
-        if (i > 1) {
-            while (i != 1) {
-                results = getPathDirection(i, x, y);
-                x = results[0];
-                y = results[1];
-                i--;
-            }
-        }
-
         getPathDirection(i, x, y);
         i--;
     }
