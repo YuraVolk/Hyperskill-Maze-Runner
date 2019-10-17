@@ -2,6 +2,7 @@ package maze;
 
 import java.io.*;
 import java.util.*;
+import maze.MazeSolver;
 
 class Maze {
     private static final String wall = "\u2588\u2588";
@@ -35,7 +36,10 @@ class Maze {
         } else {
             this.maze = generateMaze();
             wallify();
-            makeExitTunnel();
+
+            makeExitTunnel('F', 'S');
+            makeExitTunnel('E', 'T');
+            wallMaze = Arrays.copyOf(wallMaze, wallMaze.length - 2);
 
             mazeExists = true;
             printMaze();
@@ -54,12 +58,11 @@ class Maze {
                     case '1':
                         System.out.print(wall);
                         break;
-                    case 'S':
-                        System.out.print(" S");
-                        break;
                     case 'E':
                     case '0':
                     case 'T':
+                    case 'S':
+                    case 'F':
                     default:
                         System.out.print(space);
                         break;
@@ -98,11 +101,11 @@ class Maze {
         }
     }
 
-    private static void makeExitTunnel() {
+    private static void makeExitTunnel(char in, char out) {
         final char[][] matrix = wallMaze;
         for(int i = 0; i < matrix.length; i++) {
             for(int j = 0; j < matrix [i].length; j++) {
-                if (matrix[i][j] == 'E') {
+                if (matrix[i][j] == in) {
                     exitX = i;
                     exitY = j;
                 }
@@ -136,9 +139,8 @@ class Maze {
             bounds--;
         }
         directExit(direction);
-        wallMaze[exitX][exitY] = 'T';
+        wallMaze[exitX][exitY] = out;
 
-        wallMaze = Arrays.copyOf(wallMaze, wallMaze.length - 2);
     }
 
     private static <T> T[]addStartingElement(T[] elements, T element) {
@@ -174,18 +176,16 @@ class Maze {
     }
 
     public char[][] generateMaze() {
-        int rowsGen = rows - 2;
-        int columnGen = columns - 2;
+        int r = rows - 2, c = columns - 2;
 
-        StringBuilder stBuilder = new StringBuilder(columnGen);
-        for (int x = 0; x < columnGen; x++) {
-            stBuilder.append('1');
-        }
-        char[][] mazeSet = new char[rowsGen][columnGen];
-        for (int x = 0; x < rowsGen; x++) mazeSet[x] = stBuilder.toString().toCharArray();
+        StringBuilder s = new StringBuilder(c);
+        for (int x = 0; x < c; x++)
+            s.append('1');
+        char[][] maz = new char[r][c];
+        for (int x = 0; x < r; x++) maz[x] = s.toString().toCharArray();
 
-        Point st = new Point((int)(Math.random() * rowsGen), (int)(Math.random() * columnGen), null);
-        mazeSet[st.r][st.c] = 'S';
+        Point st = new Point((int)(Math.random() * r), (int)(Math.random() * c), null);
+        maz[st.r][st.c] = 'F';
 
         ArrayList < Point > frontier = new ArrayList <Point> ();
         for (int x = -1; x <= 1; x++)
@@ -193,7 +193,7 @@ class Maze {
                 if (x == 0 && y == 0 || x != 0 && y != 0)
                     continue;
                 try {
-                    if (mazeSet[st.r + x][st.c + y] == '0') continue;
+                    if (maz[st.r + x][st.c + y] == '0') continue;
                 } catch (Exception e) {
                     continue;
                 }
@@ -205,18 +205,18 @@ class Maze {
             Point cu = frontier.remove((int)(Math.random() * frontier.size()));
             Point op = cu.opposite();
             try {
-                if (mazeSet[cu.r][cu.c] == '1') {
-                    if (mazeSet[op.r][op.c] == '1') {
+                if (maz[cu.r][cu.c] == '1') {
+                    if (maz[op.r][op.c] == '1') {
 
-                        mazeSet[cu.r][cu.c] = '0';
-                        mazeSet[op.r][op.c] = '0';
+                        maz[cu.r][cu.c] = '0';
+                        maz[op.r][op.c] = '0';
                         last = op;
-                        for (int x = -1; x <= 1; x++)
+                            for (int x = -1; x <= 1; x++)
                             for (int y = -1; y <= 1; y++) {
                                 if (x == 0 && y == 0 || x != 0 && y != 0)
                                     continue;
                                 try {
-                                    if (mazeSet[op.r + x][op.c + y] == '0') continue;
+                                    if (maz[op.r + x][op.c + y] == '0') continue;
                                 } catch (Exception e) {
                                     continue;
                                 }
@@ -229,7 +229,7 @@ class Maze {
 
             try {
                 if (frontier.isEmpty()) {
-                    mazeSet[last.r][last.c] = 'E';
+                    maz[last.r][last.c] = 'E';
                 }
             } catch (Exception e) {
                 System.exit(0);
@@ -238,7 +238,7 @@ class Maze {
         }
 
 
-        return mazeSet;
+        return maz;
     }
 
     public static class Point {
